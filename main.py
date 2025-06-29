@@ -36,15 +36,13 @@ def load_data(
 
 @app.command()
 def check_pub(
-    no_save: bool = typer.Option(
-        False, '--no-save', is_flag=True, help='Disable saving new publications to the database'
-    ),
-    no_notify: bool = typer.Option(
-        False, '--no-notify', is_flag=True, help='Disable notification for new publications'
+    save: bool = typer.Option(False, '--save', '-s', help='Save new publications to the database'),
+    notify: bool = typer.Option(
+        False, '--notify', '-n', help='Notify new publications via Telegram'
     ),
 ):
     """Check if new publications exists and save/notify if proceed."""
-    pub.check(not no_save, not no_notify)
+    pub.check(save, notify)
 
 
 if __name__ == '__main__':
