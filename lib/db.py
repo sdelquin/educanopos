@@ -80,7 +80,7 @@ class Board(BaseModel):
 
     def fetch_publications(self) -> Generator:
         """Get (fetch) all publications for this board on API."""
-        yield from requests.get(self.api_url).json()
+        yield from requests.get(self.api_url, headers={'User-Agent': settings.USER_AGENT}).json()
 
 
 class Publication(BaseModel):

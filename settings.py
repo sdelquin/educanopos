@@ -18,3 +18,7 @@ REQ_SLEEP = config('REQ_SLEEP', default=0.5, cast=float)
 TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = config('TELEGRAM_CHAT_ID')
 telegramtk.init(TELEGRAM_BOT_TOKEN)
+
+USER_AGENT = config(
+    'USER_AGENT', default='Mozilla/5.0 (X11; Linux x86_64; rv:127.0) Gecko/20100101 Firefox/127.0'
+)
