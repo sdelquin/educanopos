@@ -10,3 +10,17 @@ db:
 
 dbsh:
     sqlite3 educanopos.db
+
+# Sync uv
+[macos]
+sync:
+    uv sync --no-group prod
+
+# Sync uv
+[linux]
+sync:
+    uv sync --no-dev --group prod
+
+# Deploy
+deploy: && sync
+    git pull
