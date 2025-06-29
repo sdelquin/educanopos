@@ -35,9 +35,16 @@ def load_data(
 
 
 @app.command()
-def check_pub():
-    """Check if new publications exists and deliver if proceed."""
-    pub.check()
+def check_pub(
+    no_save: bool = typer.Option(
+        False, '--no-save', is_flag=True, help='Disable saving new publications to the database'
+    ),
+    no_notify: bool = typer.Option(
+        False, '--no-notify', is_flag=True, help='Disable notification for new publications'
+    ),
+):
+    """Check if new publications exists and save/notify if proceed."""
+    pub.check(not no_save, not no_notify)
 
 
 if __name__ == '__main__':

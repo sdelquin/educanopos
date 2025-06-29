@@ -8,7 +8,7 @@ import settings
 from .db import Process, Publication
 
 
-def check():
+def check(save: bool = True, notify: bool = True) -> None:
     for process in Process.select().where(Process.active):
         for corp in process.corps:
             for speciality in corp.specialities:
@@ -30,14 +30,17 @@ def check():
                                 date=publication_data['fechamodificado'],
                                 board=board,
                             )
-                            logger.debug(f'✨ New publication found and saved: {publication}')
-                            logger.debug('📤 Notyfying via Telegram')
+                            logger.debug(f'✨ New publication found: {publication}')
                             try:
-                                telegramtk.send_message(
-                                    settings.TELEGRAM_CHAT_ID, publication.as_markdown
-                                )
+                                if notify:
+                                    logger.debug('📤 Notifying publication via Telegram')
+                                    telegramtk.send_message(
+                                        settings.TELEGRAM_CHAT_ID, publication.as_markdown
+                                    )
                             except telegramtk.TelegramError as err:
                                 logger.error(f'Error sending Telegram message: {err}')
                             else:
-                                publication.save()
+                                if save:
+                                    logger.debug('💾 Saving publication to database')
+                                    publication.save()
                     time.sleep(settings.REQ_SLEEP)
