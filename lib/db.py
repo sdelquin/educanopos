@@ -1,8 +1,14 @@
+from typing import Generator
+
 import peewee
+import requests
 import yaml
 from loguru import logger
+from telegramtk.utils import escape_markdown
 
-db = peewee.SqliteDatabase('educanopos.db')
+import settings
+
+db = peewee.SqliteDatabase(settings.DB_PATH)
 
 
 class BaseModel(peewee.Model):
@@ -18,6 +24,9 @@ class Process(BaseModel):
     marks_url = peewee.CharField(max_length=255)
     active = peewee.BooleanField(default=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Corp(BaseModel):
     """Cuerpo"""
@@ -26,6 +35,9 @@ class Corp(BaseModel):
     name = peewee.CharField(max_length=255, unique=True)
     process = peewee.ForeignKeyField(Process, backref='corps')
 
+    def __str__(self):
+        return self.name
+
 
 class Speciality(BaseModel):
     """Especialidad"""
@@ -33,6 +45,9 @@ class Speciality(BaseModel):
     code = peewee.SmallIntegerField(primary_key=True)
     name = peewee.CharField(max_length=255)
     corp = peewee.ForeignKeyField(Corp, backref='specialities')
+
+    def __str__(self):
+        return self.name
 
 
 class Board(BaseModel):
@@ -47,35 +62,70 @@ class Board(BaseModel):
     # class Meta:
     #     primary_key = peewee.CompositeKey('code', 'speciality')
 
+    def __str__(self):
+        return f'{self.speciality} @ {self.name}'
+
+    @property
+    def api_url(self) -> str:
+        return settings.API_URL.format(
+            board_code=self.code,
+            process_code=self.speciality.corp.process.code,
+            board_kind=self.kind,
+            speciality_code=self.speciality.code,
+        )
+
+    def get_publications(self) -> peewee.SelectQuery:
+        """Get all publications for this board on database."""
+        return Publication.select().where(Publication.board == self)
+
+    def fetch_publications(self) -> Generator:
+        """Get (fetch) all publications for this board on API."""
+        yield from requests.get(self.api_url).json()
+
 
 class Publication(BaseModel):
     """Publicación"""
 
-    code = peewee.SmallIntegerField(primary_key=True)
+    code = peewee.SmallIntegerField()
     name = peewee.CharField(max_length=255)
     description = peewee.CharField(max_length=1024, null=True)
-    modified_at = peewee.CharField(max_length=255)
-    managed = peewee.BooleanField(default=True)
+    date = peewee.CharField(max_length=255)
     board = peewee.ForeignKeyField(Board, backref='publications')
+
+    def __str__(self):
+        return f'{self.board} → {self.name}'
+
+    @property
+    def as_markdown(self) -> str:
+        """Return publication as Markdown formatted string."""
+        return rf"""
+ℹ️ Nueva publicación de procedimiento selectivo \#Personal
+
+{escape_markdown(str(self.board.speciality.corp.process))} \| {escape_markdown(str(self.board.speciality.corp))}
+
+*{escape_markdown(str(self.board))}*
+_{escape_markdown(self.name)} \({escape_markdown(self.date)}\)_
+[Ver publicación]({self.board.speciality.corp.process.marks_url})
+"""
 
 
 def create_tables() -> None:
     """Create all tables in the database."""
-    logger.info('Creating database tables...')
+    logger.info('Creating database tables')
     with db:
         db.create_tables([Process, Corp, Speciality, Board, Publication])
 
 
 def drop_tables() -> None:
     """Drop all tables in the database."""
-    logger.info('Dropping database tables...')
+    logger.info('Dropping database tables')
     with db:
         db.drop_tables([Process, Corp, Speciality, Board, Publication])
 
 
 def load_data(data_file: str) -> None:
     """Load initial data into the database."""
-    logger.info(f'Loading data from {data_file}...')
+    logger.info(f'Loading data from {data_file}')
     with open(data_file) as file:
         data = yaml.safe_load(file)
         for process_data in data['processes']:

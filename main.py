@@ -1,6 +1,6 @@
 import typer
 
-from lib import cli, db, logger
+from lib import cli, db, logger, pub
 
 app = cli.build_typer('Evaluación de la práctica docente')
 
@@ -32,6 +32,12 @@ def load_data(
 ):
     """Load data into the database."""
     db.load_data(data_file)
+
+
+@app.command()
+def check_pub():
+    """Check if new publications exists and deliver if proceed."""
+    pub.check()
 
 
 if __name__ == '__main__':

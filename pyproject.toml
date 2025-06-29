@@ -7,6 +7,8 @@ dependencies = [
     "peewee>=3.18.1",
     "prettyconf>=2.3.0",
     "pyyaml>=6.0.2",
+    "requests>=2.32.4",
+    "telegramtk>=0.1.0",
     "typer>=0.16.0",
 ]
 
