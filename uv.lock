@@ -108,6 +108,7 @@ dev = [
     { name = "ipython", specifier = ">=9.3.0" },
     { name = "pytest", specifier = ">=8.4.1" },
 ]
+prod = []
 
 [[package]]
 name = "executing"

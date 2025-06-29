@@ -1,6 +1,6 @@
 # Check for new publications and save/notify if proceed
 run:
-    uv run python main.py -v check-pub
+    uv run python main.py -v check-pub --notify --save
 
 # Reset database and load data from file
 reset-db file:
