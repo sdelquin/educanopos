@@ -1,5 +1,6 @@
 import peewee
 import yaml
+from loguru import logger
 
 db = peewee.SqliteDatabase('educanopos.db')
 
@@ -58,41 +59,48 @@ class Publication(BaseModel):
     board = peewee.ForeignKeyField(Board, backref='publications')
 
 
-def create_tables():
+def create_tables() -> None:
     """Create all tables in the database."""
+    logger.info('Creating database tables...')
     with db:
         db.create_tables([Process, Corp, Speciality, Board, Publication])
 
 
-def drop_tables():
+def drop_tables() -> None:
     """Drop all tables in the database."""
+    logger.info('Dropping database tables...')
     with db:
         db.drop_tables([Process, Corp, Speciality, Board, Publication])
 
 
-def load_data():
+def load_data(data_file: str) -> None:
     """Load initial data into the database."""
-    with open('data.yaml') as file:
+    logger.info(f'Loading data from {data_file}...')
+    with open(data_file) as file:
         data = yaml.safe_load(file)
         for process_data in data['processes']:
+            logger.debug(f'Loading process: {process_data["name"]}')
             process = Process.create(
                 code=process_data['code'],
                 name=process_data['name'],
                 marks_url=process_data['marks_url'],
             )
             for corp_data in process_data['corps']:
+                logger.debug(f'Loading corp: {corp_data["name"]}')
                 corp = Corp.create(
                     code=corp_data['code'],
                     name=corp_data['name'],
                     process=process,
                 )
                 for speciality_data in corp_data['specialities']:
+                    logger.debug(f'Loading speciality: {speciality_data["name"]}')
                     speciality = Speciality.create(
                         code=speciality_data['code'],
                         name=speciality_data['name'],
                         corp=corp,
                     )
                     for board_data in speciality_data['boards']:
+                        logger.debug(f'Loading board: {board_data["name"]}')
                         Board.create(
                             code=board_data['code'],
                             name=board_data['name'],
