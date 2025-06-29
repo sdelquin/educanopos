@@ -105,7 +105,7 @@ class Publication(BaseModel):
 
 *{escape_markdown(str(self.board))}*
 _{escape_markdown(self.name)} \({escape_markdown(self.date)}\)_
-[Ver publicación]({self.board.speciality.corp.process.marks_url})
+[Consultar publicación]({self.board.speciality.corp.process.marks_url})
 """
 
 
