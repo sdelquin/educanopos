@@ -49,7 +49,7 @@ def build_logger(logfile: str = settings.LOGFILE, log_level: str = 'DEBUG'):
         logfile,
         format='{time:YYYY-MM-DD HH:mm:ss} {level:8} {message} [{file}:{line}]',
         level=log_level,
-        rotation='1 day',
+        rotation='00:00',
         retention='1 week',
         filter=CustomFilter('file'),
     )
