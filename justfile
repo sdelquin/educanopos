@@ -29,6 +29,8 @@ sync:
     uv sync --no-dev --group prod
 
 # Deploy
-deploy: && sync
+deploy:
+    #!/usr/bin/env bash
     git pull
+    just sync
     supervisorctl restart educanopos
