@@ -31,3 +31,4 @@ sync:
 # Deploy
 deploy: && sync
     git pull
+    supervisorctl restart educanopos
