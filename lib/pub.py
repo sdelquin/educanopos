@@ -32,6 +32,8 @@ def check(save: bool = True, notify: bool = True) -> None:
                                 board=board,
                             )
                             logger.debug(f'✨ New publication found: {publication}')
+                            logger.debug('💾 Saving publication to database')
+                            publication.save()
                             try:
                                 if notify:
                                     logger.debug('📤 Notifying publication via Telegram')
@@ -40,8 +42,8 @@ def check(save: bool = True, notify: bool = True) -> None:
                                     )
                             except telegramtk.TelegramError as err:
                                 logger.error(f'Error sending Telegram message: {err}')
+                                publication.delete_instance()
                             else:
-                                if save:
-                                    logger.debug('💾 Saving publication to database')
-                                    publication.save()
+                                if not save:
+                                    publication.delete_instance()
                     time.sleep(settings.REQ_SLEEP)

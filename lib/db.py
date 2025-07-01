@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Generator
 
 import peewee
@@ -67,7 +69,7 @@ class Board(BaseModel):
 
     @property
     def api_url(self) -> str:
-        return settings.API_URL.format(
+        return settings.API_PUBLICATIONS_URL.format(
             board_code=self.code,
             process_code=self.speciality.corp.process.code,
             board_kind=self.kind,
@@ -96,6 +98,20 @@ class Publication(BaseModel):
         return f'{self.board} → {self.name}'
 
     @property
+    def api_url(self) -> str:
+        return settings.API_RESULTS_URL.format(
+            publication_code=self.code,
+            board_code=self.board.code,
+            process_code=self.board.speciality.corp.process.code,
+            board_kind=self.board.kind,
+            speciality_code=self.board.speciality.code,
+        )
+
+    @property
+    def api_screen_url(self) -> str:
+        return settings.API_SCREEN_URL.format(publication_pk=self.id)
+
+    @property
     def as_markdown(self) -> str:
         """Return publication as Markdown formatted string."""
         return rf"""
@@ -107,6 +123,28 @@ class Publication(BaseModel):
 _{escape_markdown(self.name)} \({escape_markdown(self.date)}\)_
 [Consultar publicación]({self.board.speciality.corp.process.marks_url})
 """
+
+    @property
+    def results_as_html(self) -> str:
+        """Return results as HTML formatted string."""
+        results = self.fetch_results()
+        buffer = []
+        buffer.append('<table>')
+        buffer.append('<tr>')
+        for field in results['fields']:
+            buffer.append(f'<th>{field}</th>')
+        buffer.append('</tr>')
+        for row in results['data']:
+            buffer.append('<tr>')
+            for field in results['fields']:
+                buffer.append(f'<td>{row[field]}</td>')
+            buffer.append('</tr>')
+        buffer.append('</table>')
+        return '\n'.join(buffer)
+
+    def fetch_results(self) -> dict:
+        """Get (fetch) all results for this publication on API."""
+        return requests.get(self.api_url, headers={'User-Agent': settings.USER_AGENT}).json()
 
 
 def create_tables() -> None:

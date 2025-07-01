@@ -1,6 +1,7 @@
 import typer
 
 from lib import cli, db, logger, pub
+from lib.screen import app as screen_app
 
 app = cli.build_typer('Evaluación de la práctica docente')
 
@@ -43,6 +44,12 @@ def check_pub(
 ):
     """Check if new publications exists and save/notify if proceed."""
     pub.check(save, notify)
+
+
+@app.command()
+def screen():
+    """Display results (screen) for a specific publication."""
+    screen_app.run()
 
 
 if __name__ == '__main__':

@@ -9,9 +9,17 @@ PROJECT_NAME = PROJECT_DIR.name
 DB_PATH = config('DB_PATH', default=PROJECT_DIR / (PROJECT_NAME + '.db'), cast=Path)
 LOGFILE = config('LOGFILE', default=PROJECT_DIR / (PROJECT_NAME + '.log'), cast=Path)
 
-API_URL = config(
-    'API_URL',
+API_PUBLICATIONS_URL = config(
+    'API_PUBLICATIONS_URL',
     default='https://www.gobiernodecanarias.org/educacion/6/dgper/opoperdocprimweb/Scripts/publicaciones/apipublicaciones.asp?codtribunal={board_code}&op={process_code}&tipo=publicaciones&tipotribunal={board_kind}&especialidad={speciality_code}',
+)
+API_RESULTS_URL = config(
+    'API_RESULTS_URL',
+    default='https://www.gobiernodecanarias.org/educacion/6/dgper/opoperdocprimweb/Scripts/publicaciones/apipublicaciones.asp?codtribunal={board_code}&op={process_code}&tipo=resultado&idpublicacion={publication_code}&tipotribunal={board_kind}&especialidad={speciality_code}&idTipoPubPadre=0',
+)
+API_SCREEN_URL = config(
+    'API_SCREEN_URL',
+    default='https://opos.matraka.es/screen/{publication_pk}/',
 )
 REQ_SLEEP = config('REQ_SLEEP', default=0.5, cast=float)
 
