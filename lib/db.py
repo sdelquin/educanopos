@@ -105,6 +105,7 @@ class Publication(BaseModel):
             process_code=self.board.speciality.corp.process.code,
             board_kind=self.board.kind,
             speciality_code=self.board.speciality.code,
+            corp_code=self.board.speciality.corp.code,
         )
 
     @property

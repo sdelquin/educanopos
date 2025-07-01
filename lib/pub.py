@@ -34,6 +34,7 @@ def check(save: bool = True, notify: bool = True) -> None:
                             logger.debug(f'✨ New publication found: {publication}')
                             logger.debug('💾 Saving publication to database')
                             publication.save()
+                            print(publication.api_url)
                             try:
                                 if notify:
                                     logger.debug('📤 Notifying publication via Telegram')
