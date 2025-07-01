@@ -130,6 +130,8 @@ _{escape_markdown(self.name)} \({escape_markdown(self.date)}\)_
         """Return results as HTML formatted string."""
         results = self.fetch_results()
         buffer = []
+        buffer.append(f'<h1>{str(self.board)}</h1>')
+        buffer.append(f'<h2>{self.name}</h2>')
         buffer.append('<table>')
         buffer.append('<tr>')
         for field in results['fields']:
