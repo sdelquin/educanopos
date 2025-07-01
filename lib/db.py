@@ -121,7 +121,7 @@ class Publication(BaseModel):
 
 *{escape_markdown(str(self.board))}*
 _{escape_markdown(self.name)} \({escape_markdown(self.date)}\)_
-[Consultar publicación CEU]({self.board.speciality.corp.process.marks_url})
+[Consultar publicación CEU]({self.board.speciality.corp.process.marks_url})  
 [Consultar publicación MATRAKA]({self.api_screen_url})
 """
 
