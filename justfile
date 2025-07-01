@@ -2,6 +2,9 @@
 run:
     uv run python main.py -v check-pub --notify --save
 
+screen:
+    uv run python main.py -v screen
+
 # Reset database and load data from file
 reset-db file:
     uv run python main.py -v create-db -f

@@ -9,3 +9,7 @@ app = Flask(__name__)
 def display(publication_pk: int) -> str:
     publication = Publication.get(Publication.id == publication_pk)
     return render_template_string(publication.results_as_html)
+
+
+if __name__ == '__main__':
+    app.run()
