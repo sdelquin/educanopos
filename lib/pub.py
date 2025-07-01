@@ -14,6 +14,7 @@ def check(save: bool = True, notify: bool = True) -> None:
             for speciality in corp.specialities:
                 for board in speciality.boards:
                     logger.info(f'Checking board: {board}')
+                    logger.debug(board.api_url)
                     for publication_data in board.fetch_publications():
                         if (
                             not Publication.select()
