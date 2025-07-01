@@ -19,7 +19,7 @@ API_RESULTS_URL = config(
 )
 API_SCREEN_URL = config(
     'API_SCREEN_URL',
-    default='https://opos.matraka.es/screen/{publication_pk}/',
+    default='https://educanopos.matraka.es/screen/{publication_pk}/',
 )
 REQ_SLEEP = config('REQ_SLEEP', default=0.5, cast=float)
 
