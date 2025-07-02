@@ -4,11 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>EDUCANOPOS | Matraka Producciones</title>
+    <link rel="stylesheet" href="/static/css/fonts.css?{{hash}}" />
     <link rel="stylesheet" href="/static/css/base.css?{{hash}}" />
   </head>
 
   <body>
-    <h1>{{process}}<br>{{corp}}</h1>
+    <h1>{{process}}<br><span class="corp">{{corp}}</span></h1>
     <h2>{{board}}</h2>
     <h3>{{publication}} {{hero_emoji}}</h3>
     <div class="container">
@@ -24,7 +25,7 @@
           {% for row in data %}
             <tr>
               {% for field in fields %}
-                <td>{{row[field] | none_to_empty}}</td>
+                <td>{{row[field] | normalize}}</td>
               {% endfor %}
             </tr>
           {% endfor %}
