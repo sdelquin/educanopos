@@ -136,6 +136,7 @@ class Publication(BaseModel):
             corp=self.board.speciality.corp,
             board=self.board,
             publication=self.name,
+            pub_date=self.date,
             fields=results['fields'],
             data=results['data'],
         )

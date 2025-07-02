@@ -39,3 +39,9 @@ footer {
   color: #a1a1a1;
   font-weight: 400;
 }
+
+.pub-date {
+  font-size: 0.9em;
+  font-weight: 400;
+  color: #a1a1a1;
+}
