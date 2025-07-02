@@ -11,24 +11,26 @@
     <h1>{{process}}<br>{{corp}}</h1>
     <h2>{{board}}</h2>
     <h3>{{publication}} {{hero_emoji}}</h3>
-    <table>
-      <thead>
-        <tr>
-          {% for field in fields %}
-              <th>{{field}}</th>
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in data %}
+    <div class="container">
+      <table>
+        <thead>
           <tr>
             {% for field in fields %}
-              <td>{{row[field] | none_to_empty}}</td>
+                <th>{{field}}</th>
             {% endfor %}
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for row in data %}
+            <tr>
+              {% for field in fields %}
+                <td>{{row[field] | none_to_empty}}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
     <footer>
       <p><span class="note">Los datos mostrados en esta página provienen directamente de la Consejería de Educación del Gobierno de Canarias. No han sido tratados ni procesados más allá de mejoras visuales.</span></p>
