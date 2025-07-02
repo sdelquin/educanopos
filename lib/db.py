@@ -140,9 +140,12 @@ class Publication(BaseModel):
             data=results['data'],
         )
 
-    def fetch_results(self) -> dict:
+    def fetch_results(self, clean: bool = True) -> dict:
         """Get (fetch) all results for this publication on API."""
-        return requests.get(self.api_url, headers={'User-Agent': settings.USER_AGENT}).json()
+        results = requests.get(self.api_url, headers={'User-Agent': settings.USER_AGENT}).json()
+        if clean:
+            results['fields'] = [field for field in results['fields'] if not field.islower()]
+        return results
 
 
 def create_tables() -> None:

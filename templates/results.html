@@ -23,7 +23,7 @@
         {% for row in data %}
           <tr>
             {% for field in fields %}
-              <td>{{row[field]}}</td>
+              <td>{{row[field] | none_to_empty}}</td>
             {% endfor %}
           </tr>
         {% endfor %}
