@@ -7,7 +7,11 @@ PROJECT_DIR = Path(__file__).parent
 PROJECT_NAME = PROJECT_DIR.name
 
 DB_PATH = config('DB_PATH', default=PROJECT_DIR / (PROJECT_NAME + '.db'), cast=Path)
-LOGFILE = config('LOGFILE', default=PROJECT_DIR / (PROJECT_NAME + '.log'), cast=Path)
+LOGFILE = config(
+    'LOGFILE',
+    default=PROJECT_DIR / 'logs' / (PROJECT_NAME + '_{time:YYYY-MM-DD}.log'),
+    cast=Path,
+)
 
 API_PUBLICATIONS_URL = config(
     'API_PUBLICATIONS_URL',

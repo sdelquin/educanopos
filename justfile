@@ -35,3 +35,7 @@ deploy:
     git pull
     just sync
     supervisorctl restart educanopos
+
+# Clean logfiles
+clean-logs:
+    find . -type f -name '*.log*' -exec rm {} \;

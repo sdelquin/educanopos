@@ -36,6 +36,13 @@ class CustomFilter:
         return True
 
 
+def lognamer(log_path: str):
+    """Custom log file name function."""
+    if m := re.search(r'.*\.\d{4}-\d{2}-\d{2}', log_path):
+        return m.group(0) + '.log'
+    return log_path
+
+
 def build_logger(logfile: str = settings.LOGFILE, log_level: str = 'DEBUG'):
     logger.remove()
     logger.add(
@@ -47,7 +54,7 @@ def build_logger(logfile: str = settings.LOGFILE, log_level: str = 'DEBUG'):
     )
     logger.add(
         logfile,
-        format='{time:YYYY-MM-DD HH:mm:ss} {level:8} {message} [{file}:{line}]',
+        format='{time:YYYY-MM-DD HH:mm:ss} {level:8} [{file}:{line}] {message}',
         level=log_level,
         rotation='00:00',
         retention='1 week',
