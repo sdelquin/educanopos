@@ -37,3 +37,5 @@ USER_AGENT = config(
 
 TEMPLATES_DIR = config('TEMPLATES_DIR', default=PROJECT_DIR / 'templates', cast=Path)
 STATIC_DIR = config('STATIC_DIR', default=PROJECT_DIR / 'static', cast=Path)
+
+HERO_EMOJI = config('HERO_EMOJI', default='📚')

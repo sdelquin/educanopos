@@ -1,4 +1,4 @@
-ℹ️ Nueva publicación de procedimiento selectivo \#Personal
+{{hero_emoji}} Nueva publicación de procedimiento selectivo \#Personal
 
 {{process}} \| {{corp}}
 

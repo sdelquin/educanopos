@@ -25,7 +25,10 @@ tr:nth-child(odd) {
 footer {
   margin-top: 50px;
   padding: 10px;
-  font-style: italic;
   background-color: #f8f8f8;
   border-top: 1px solid #ddd;
+
+  .note {
+    font-style: italic;
+  }
 }
