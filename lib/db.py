@@ -6,9 +6,10 @@ import peewee
 import requests
 import yaml
 from loguru import logger
-from telegramtk.utils import escape_markdown
+from telegramtk.utils import escape_markdown as em
 
 import settings
+from lib import templates
 
 db = peewee.SqliteDatabase(settings.DB_PATH)
 
@@ -114,17 +115,17 @@ class Publication(BaseModel):
 
     @property
     def as_markdown(self) -> str:
-        """Return publication as Markdown formatted string."""
-        return rf"""
-ℹ️ Nueva publicación de procedimiento selectivo \#Personal
-
-{escape_markdown(str(self.board.speciality.corp.process))} \| {escape_markdown(str(self.board.speciality.corp))}
-
-*{escape_markdown(str(self.board))}*
-_{escape_markdown(self.name)} \({escape_markdown(self.date)}\)_
-[Consultar publicación CEU]({self.board.speciality.corp.process.marks_url})  
-[Consultar publicación MATRAKA]({self.api_screen_url})
-"""
+        return templates.render_template(
+            'publication.md',
+            process=em(str(self.board.speciality.corp.process)),
+            corp=em(str(self.board.speciality.corp)),
+            board=em(self.board.name),
+            speciality=em(str(self.board.speciality)),
+            publication_name=em(self.name),
+            publication_date=em(self.date),
+            marks_url=self.board.speciality.corp.process.marks_url,
+            api_screen_url=self.api_screen_url,
+        )
 
     @property
     def results_as_html(self) -> str:

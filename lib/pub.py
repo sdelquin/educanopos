@@ -14,7 +14,6 @@ def check(save: bool = True, notify: bool = True) -> None:
             for speciality in corp.specialities:
                 for board in speciality.boards:
                     logger.info(f'Checking board: {board}')
-                    logger.debug(board.api_url)
                     for publication_data in board.fetch_publications():
                         if (
                             not Publication.select()
@@ -34,7 +33,6 @@ def check(save: bool = True, notify: bool = True) -> None:
                             logger.debug(f'✨ New publication found: {publication}')
                             logger.debug('💾 Saving publication to database')
                             publication.save()
-                            print(publication.api_url)
                             try:
                                 if notify:
                                     logger.debug('📤 Notifying publication via Telegram')
@@ -43,8 +41,10 @@ def check(save: bool = True, notify: bool = True) -> None:
                                     )
                             except telegramtk.TelegramError as err:
                                 logger.error(f'Error sending Telegram message: {err}')
+                                logger.debug('🗑️ Deleting publication from database')
                                 publication.delete_instance()
                             else:
                                 if not save:
+                                    logger.debug('🗑️ Deleting publication from database')
                                     publication.delete_instance()
                     time.sleep(settings.REQ_SLEEP)

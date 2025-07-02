@@ -30,3 +30,5 @@ telegramtk.init(TELEGRAM_BOT_TOKEN)
 USER_AGENT = config(
     'USER_AGENT', default='Mozilla/5.0 (X11; Linux x86_64; rv:127.0) Gecko/20100101 Firefox/127.0'
 )
+
+TEMPLATES_DIR = config('TEMPLATES_DIR', default=PROJECT_DIR / 'templates', cast=Path)
