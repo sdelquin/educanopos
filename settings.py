@@ -39,3 +39,4 @@ TEMPLATES_DIR = config('TEMPLATES_DIR', default=PROJECT_DIR / 'templates', cast=
 STATIC_DIR = config('STATIC_DIR', default=PROJECT_DIR / 'static', cast=Path)
 
 HERO_EMOJI = config('HERO_EMOJI', default='📚')
+NONE_REPR = config('NONE_REPR', default='-')

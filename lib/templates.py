@@ -10,7 +10,7 @@ env = Environment(loader=FileSystemLoader(settings.TEMPLATES_DIR))
 env.globals['hash'] = hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()
 env.globals['hero_emoji'] = settings.HERO_EMOJI
 
-env.filters['none_to_empty'] = lambda value: value if value is not None else ''
+env.filters['none_to_empty'] = lambda value: value if value is not None else settings.NONE_REPR
 
 
 def render_template(template_path, **context):
