@@ -47,9 +47,9 @@ def check_pub(
 
 
 @app.command()
-def screen():
+def screen(debug: bool = typer.Option(False, '--debug', '-d', help='Run screen app in debug mode')):
     """Display results (screen) for a specific publication."""
-    screen_app.run()
+    screen_app.run(debug=debug)
 
 
 if __name__ == '__main__':

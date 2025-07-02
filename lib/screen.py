@@ -1,15 +1,13 @@
-from flask import Flask, render_template_string
+from flask import Flask
+
+import settings
 
 from .db import Publication
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=settings.STATIC_DIR, template_folder=settings.TEMPLATES_DIR)
 
 
 @app.route('/screen/<int:publication_pk>/')
 def display(publication_pk: int) -> str:
     publication = Publication.get(Publication.id == publication_pk)
-    return render_template_string(publication.results_as_html)
-
-
-if __name__ == '__main__':
-    app.run()
+    return publication.as_html

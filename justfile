@@ -2,8 +2,9 @@
 run:
     uv run python main.py -v check-pub --notify --save
 
+# Launch screen server (to display publications)
 screen:
-    uv run python main.py -v screen
+    uv run python main.py -v screen --debug
 
 # Reset database and load data from file
 reset-db file:

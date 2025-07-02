@@ -128,24 +128,17 @@ class Publication(BaseModel):
         )
 
     @property
-    def results_as_html(self) -> str:
-        """Return results as HTML formatted string."""
+    def as_html(self) -> str:
         results = self.fetch_results()
-        buffer = []
-        buffer.append(f'<h1>{str(self.board)}</h1>')
-        buffer.append(f'<h2>{self.name}</h2>')
-        buffer.append('<table>')
-        buffer.append('<tr>')
-        for field in results['fields']:
-            buffer.append(f'<th>{field}</th>')
-        buffer.append('</tr>')
-        for row in results['data']:
-            buffer.append('<tr>')
-            for field in results['fields']:
-                buffer.append(f'<td>{row[field]}</td>')
-            buffer.append('</tr>')
-        buffer.append('</table>')
-        return '\n'.join(buffer)
+        return templates.render_template(
+            'results.html',
+            process=self.board.speciality.corp.process,
+            corp=self.board.speciality.corp,
+            board=self.board,
+            publication=self.name,
+            fields=results['fields'],
+            data=results['data'],
+        )
 
     def fetch_results(self) -> dict:
         """Get (fetch) all results for this publication on API."""

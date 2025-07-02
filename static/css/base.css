@@ -1,0 +1,31 @@
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Filas impares */
+tr:nth-child(odd) {
+  background-color: white;
+}
+
+footer {
+  margin-top: 50px;
+  padding: 10px;
+  font-style: italic;
+  background-color: #f8f8f8;
+  border-top: 1px solid #ddd;
+}
