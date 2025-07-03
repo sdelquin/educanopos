@@ -11,7 +11,7 @@
   <body>
     <h1>{{process}}<br><span class="corp">{{corp}}</span></h1>
     <h2>{{board}}</h2>
-    <h3>{{publication.upper()}} {{hero_emoji}}<br><span class="pub-date">{{pub_date}}</span></h3>
+    <h3>{{publication.name.upper()}} {{hero_emoji}}<br><span class="pub-date">{{pub_date}}</span></h3>
     <div class="container">
       <table>
         <thead>
@@ -32,6 +32,17 @@
         </tbody>
       </table>
     </div>
+
+    {% if board_publications %}
+      <h2>Otras publicaciones de este tribunal</h2>
+
+      {% for bpub in board_publications %}
+        {% if bpub.id != publication.id %}
+          <a href="/screen/{{bpub.id}}/">{{bpub.as_name_date}}</a>
+          <br>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
 
     <footer>
       <p>Los datos mostrados en esta página provienen directamente de la Consejería de Educación del Gobierno de Canarias. No han sido tratados ni procesados más allá de mejoras visuales.</p>

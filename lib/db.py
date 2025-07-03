@@ -135,11 +135,17 @@ class Publication(BaseModel):
             process=self.board.speciality.corp.process,
             corp=self.board.speciality.corp,
             board=self.board,
-            publication=self.name,
+            publication=self,
             pub_date=self.date,
             fields=results['fields'],
             data=results['data'],
+            board_publications=self.board.get_publications(),
         )
+
+    @property
+    def as_name_date(self) -> str:
+        """Return a string with the publication name and date."""
+        return f'{self.name} ({self.date})'
 
     def fetch_results(self, clean: bool = True) -> dict:
         """Get (fetch) all results for this publication on API."""
