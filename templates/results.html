@@ -25,13 +25,15 @@
         </thead>
         <tbody>
           {% for row in data %}
-            <tr {% if row|drop_row %}class="drop"{% endif %}>
-              {% for field in fields %}
-                {% if not field|hide_field %}
-                  <td>{{row[field] | normalize}}</td>
-                {% endif %}
-              {% endfor %}
-            </tr>
+            {% if not row|drop_row %}
+              <tr>
+                {% for field in fields %}
+                  {% if not field|hide_field %}
+                    <td>{{row[field] | normalize}}</td>
+                  {% endif %}
+                {% endfor %}
+              </tr>
+            {% endif %}
           {% endfor %}
         </tbody>
       </table>
