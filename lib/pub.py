@@ -15,14 +15,30 @@ def check(save: bool = True, notify: bool = True) -> None:
                 for board in speciality.boards:
                     logger.info(f'Checking board: {board}')
                     for publication_data in board.fetch_publications():
-                        if (
-                            not Publication.select()
-                            .where(
-                                Publication.board == board,
-                                Publication.code == publication_data['code'],
+                        try:
+                            publication = Publication.get(
+                                (Publication.board == board)
+                                & (Publication.code == publication_data['code'])
                             )
-                            .exists()
-                        ):
+                            if publication.date != publication_data['fechamodificado']:
+                                publication.date = publication_data['fechamodificado']
+                                logger.debug(f'🔄 Updated publication found: {publication}')
+                                logger.debug('💾 Saving updated publication to database')
+                                publication.save()
+                                try:
+                                    if notify:
+                                        logger.debug(
+                                            '📤 Notifying updated publication via Telegram'
+                                        )
+                                        telegramtk.send_message(
+                                            settings.TELEGRAM_CHAT_ID, publication.as_markdown
+                                        )
+                                except telegramtk.TelegramError as err:
+                                    logger.error(f'Error sending Telegram message: {err}')
+                                    logger.debug('🗑️ Deleting publication from database')
+                                    publication.delete_instance()
+                                    continue
+                        except Publication.DoesNotExist:
                             publication = Publication(
                                 code=publication_data['code'],
                                 name=publication_data['description'],
@@ -43,8 +59,8 @@ def check(save: bool = True, notify: bool = True) -> None:
                                 logger.error(f'Error sending Telegram message: {err}')
                                 logger.debug('🗑️ Deleting publication from database')
                                 publication.delete_instance()
-                            else:
-                                if not save:
-                                    logger.debug('🗑️ Deleting publication from database')
-                                    publication.delete_instance()
+                                continue
+                        if not save:
+                            logger.debug('🗑️ Deleting publication from database')
+                            publication.delete_instance()
                     time.sleep(settings.REQ_SLEEP)
