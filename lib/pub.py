@@ -31,7 +31,8 @@ def check(save: bool = True, notify: bool = True) -> None:
                                             '📤 Notifying updated publication via Telegram'
                                         )
                                         telegramtk.send_message(
-                                            settings.TELEGRAM_CHAT_ID, publication.as_markdown
+                                            settings.TELEGRAM_CHAT_ID,
+                                            publication.render_as_markdown(update=True),
                                         )
                                 except telegramtk.TelegramError as err:
                                     logger.error(f'Error sending Telegram message: {err}')
@@ -53,7 +54,7 @@ def check(save: bool = True, notify: bool = True) -> None:
                                 if notify:
                                     logger.debug('📤 Notifying publication via Telegram')
                                     telegramtk.send_message(
-                                        settings.TELEGRAM_CHAT_ID, publication.as_markdown
+                                        settings.TELEGRAM_CHAT_ID, publication.render_as_markdown()
                                     )
                             except telegramtk.TelegramError as err:
                                 logger.error(f'Error sending Telegram message: {err}')

@@ -113,8 +113,7 @@ class Publication(BaseModel):
     def api_screen_url(self) -> str:
         return settings.API_SCREEN_URL.format(publication_pk=self.id)
 
-    @property
-    def as_markdown(self) -> str:
+    def render_as_markdown(self, update: bool = False) -> str:
         return templates.render_template(
             'publication.md',
             process=em(str(self.board.speciality.corp.process)),
@@ -125,10 +124,11 @@ class Publication(BaseModel):
             publication_date=em(self.date),
             marks_url=self.board.speciality.corp.process.marks_url,
             api_screen_url=self.api_screen_url,
+            update=update,
+            hero_emoji=settings.HERO_EMOJI_UPDATE if update else settings.HERO_EMOJI_NEW,
         )
 
-    @property
-    def as_html(self) -> str:
+    def render_as_html(self) -> str:
         results = self.fetch_results()
         return templates.render_template(
             'results.html',

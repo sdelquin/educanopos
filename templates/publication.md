@@ -1,4 +1,4 @@
-{{hero_emoji}} Nueva publicación de procedimiento selectivo \#Personal
+{{hero_emoji}} {% if update %}Publicación actualizada{% else %}Nueva publicación{% endif %} de procedimiento selectivo \#Personal
 
 {{process}} \| {{corp}}
 

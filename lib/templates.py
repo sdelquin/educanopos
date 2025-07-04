@@ -11,7 +11,6 @@ from . import filters
 env = Environment(loader=FileSystemLoader(settings.TEMPLATES_DIR))
 
 env.globals['hash'] = hashlib.sha256(datetime.now().isoformat().encode()).hexdigest()
-env.globals['hero_emoji'] = settings.HERO_EMOJI
 
 for filter, func in inspect.getmembers(filters, inspect.isfunction):
     env.filters[filter] = func

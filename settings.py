@@ -38,7 +38,8 @@ USER_AGENT = config(
 TEMPLATES_DIR = config('TEMPLATES_DIR', default=PROJECT_DIR / 'templates', cast=Path)
 STATIC_DIR = config('STATIC_DIR', default=PROJECT_DIR / 'static', cast=Path)
 
-HERO_EMOJI = config('HERO_EMOJI', default='📚')
+HERO_EMOJI_NEW = config('HERO_EMOJI_NEW', default='💫')
+HERO_EMOJI_UPDATE = config('HERO_EMOJI_UPDATE', default='🔄')
 NONE_REPR = config('NONE_REPR', default='-')
 
 DROP_ROW_FIELD = config('DROP_ROW_FIELD', default='eliminacionpub_hide')
