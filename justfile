@@ -39,3 +39,7 @@ deploy:
 # Clean logfiles
 clean-logs:
     find . -type f -name '*.log*' -exec rm {} \;
+
+# Open iPython shell
+sh:
+    uv run ipython

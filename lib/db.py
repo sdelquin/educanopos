@@ -147,11 +147,9 @@ class Publication(BaseModel):
         """Return a string with the publication name and date."""
         return f'{self.name} ({self.date})'
 
-    def fetch_results(self, clean: bool = True) -> dict:
+    def fetch_results(self) -> dict:
         """Get (fetch) all results for this publication on API."""
         results = requests.get(self.api_url, headers={'User-Agent': settings.USER_AGENT}).json()
-        if clean:
-            results['fields'] = [field for field in results['fields'] if not field.islower()]
         return results
 
 

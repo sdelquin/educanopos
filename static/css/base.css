@@ -27,6 +27,13 @@ tr:nth-child(odd) {
   background-color: white;
 }
 
+tr.drop {
+  td {
+    text-decoration: line-through;
+    color: #b1b1b1;
+  }
+}
+
 footer {
   margin-top: 50px;
   padding: 10px;

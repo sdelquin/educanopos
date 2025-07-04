@@ -40,3 +40,5 @@ STATIC_DIR = config('STATIC_DIR', default=PROJECT_DIR / 'static', cast=Path)
 
 HERO_EMOJI = config('HERO_EMOJI', default='📚')
 NONE_REPR = config('NONE_REPR', default='-')
+
+DROP_ROW_FIELD = config('DROP_ROW_FIELD', default='eliminacionpub_hide')
