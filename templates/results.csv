@@ -1,0 +1,8 @@
+{% for field in fields if not field|hide_field -%}
+    {{field}}{% if not loop.last %},{% endif %}
+{%- endfor %}
+{% for row in data if not row|drop_row -%}
+    {% for field in fields if not field|hide_field -%}
+        "{{row[field]}}"{%if not loop.last%},{% endif %}
+    {%- endfor %}{{'\n'}}
+{%- endfor %}

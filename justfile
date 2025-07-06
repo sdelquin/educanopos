@@ -41,5 +41,9 @@ clean-logs:
     find . -type f -name '*.log*' -exec rm {} \;
 
 # Open iPython shell
-sh:
+@sh:
     uv run ipython
+
+# Clean all saved results for publications
+clean-results:
+    find results -type f -name '*.csv' -exec rm {} \;

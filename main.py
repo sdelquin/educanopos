@@ -52,5 +52,15 @@ def screen(debug: bool = typer.Option(False, '--debug', '-d', help='Run screen a
     screen_app.run(debug=debug)
 
 
+@app.command()
+def export(
+    publication_name: str = typer.Argument(
+        ..., help='Name of the publication to export results for'
+    ),
+):
+    """Export publication results to CSV."""
+    pub.export(publication_name)
+
+
 if __name__ == '__main__':
     app()

@@ -1,7 +1,9 @@
 import time
+from json import JSONDecodeError
 
 import telegramtk
 from loguru import logger
+from peewee import fn
 
 import settings
 
@@ -65,3 +67,16 @@ def check(save: bool = True, notify: bool = True) -> None:
                             logger.debug('🗑️ Deleting publication from database')
                             publication.delete_instance()
                     time.sleep(settings.REQ_SLEEP)
+
+
+def export(publication_name: str) -> None:
+    for publication in Publication.select().where(
+        fn.UPPER(Publication.name) == publication_name.upper()
+    ):
+        logger.info(f'Exporting results for: {publication}')
+        try:
+            publication.export_results()
+        except JSONDecodeError:
+            logger.error('Error decoding JSON for this publication')
+            continue
+        logger.success(f'Results exported to: {publication.results_path}')

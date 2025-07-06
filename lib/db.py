@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Generator
 
 import peewee
 import requests
 import yaml
 from loguru import logger
+from slugify import slugify
 from telegramtk.utils import escape_markdown as em
 
 import settings
@@ -136,7 +138,6 @@ class Publication(BaseModel):
             corp=self.board.speciality.corp,
             board=self.board,
             publication=self,
-            pub_date=self.date,
             fields=results['fields'],
             data=results['data'],
             board_publications=self.board.get_publications(),
@@ -147,10 +148,43 @@ class Publication(BaseModel):
         """Return a string with the publication name and date."""
         return f'{self.name} ({self.date})'
 
+    @property
+    def slug(self) -> str:
+        return slugify(self.name)
+
+    @property
+    def results_path(self) -> Path:
+        """Return the path where results are stored."""
+        return settings.RESULTS_PATH / f'{self.slug}/pub_{self.id}.csv'
+
     def fetch_results(self) -> dict:
         """Get (fetch) all results for this publication on API."""
         results = requests.get(self.api_url, headers={'User-Agent': settings.USER_AGENT}).json()
         return results
+
+    def export_results(self, add_context: bool = True) -> None:
+        results = self.fetch_results()
+        if add_context:
+            context = {
+                'Proceso': self.board.speciality.corp.process,
+                'Cuerpo': self.board.speciality.corp,
+                'Especialidad': self.board.speciality,
+                'Tribunal': self.board.name,
+                'Publicación': self.name,
+                'Fecha de publicación': self.date,
+            }
+            results['fields'] = list(context.keys()) + results['fields']
+            for row in results['data']:
+                row |= context
+        render = templates.render_template(
+            'results.csv',
+            fields=results['fields'],
+            data=results['data'],
+        )
+        if not self.results_path.parent.exists():
+            self.results_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.results_path, 'w') as file:
+            file.write(render)
 
 
 def create_tables() -> None:

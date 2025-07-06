@@ -43,3 +43,6 @@ HERO_EMOJI_UPDATE = config('HERO_EMOJI_UPDATE', default='🔄')
 NONE_REPR = config('NONE_REPR', default='-')
 
 DROP_ROW_FIELD = config('DROP_ROW_FIELD', default='eliminacionpub_hide')
+RESULTS_PATH = config('RESULTS_PATH', default=PROJECT_DIR / 'results', cast=Path)
+if not RESULTS_PATH.exists():
+    RESULTS_PATH.mkdir(parents=True, exist_ok=True)
