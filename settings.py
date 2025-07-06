@@ -37,12 +37,10 @@ USER_AGENT = config(
 
 TEMPLATES_DIR = config('TEMPLATES_DIR', default=PROJECT_DIR / 'templates', cast=Path)
 STATIC_DIR = config('STATIC_DIR', default=PROJECT_DIR / 'static', cast=Path)
+DATA_PATH = config('DATA_PATH', default=PROJECT_DIR / 'data', cast=Path)
 
 HERO_EMOJI_NEW = config('HERO_EMOJI_NEW', default='💫')
 HERO_EMOJI_UPDATE = config('HERO_EMOJI_UPDATE', default='🔄')
 NONE_REPR = config('NONE_REPR', default='-')
 
 DROP_ROW_FIELD = config('DROP_ROW_FIELD', default='eliminacionpub_hide')
-RESULTS_PATH = config('RESULTS_PATH', default=PROJECT_DIR / 'results', cast=Path)
-if not RESULTS_PATH.exists():
-    RESULTS_PATH.mkdir(parents=True, exist_ok=True)

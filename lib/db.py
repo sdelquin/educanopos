@@ -155,7 +155,7 @@ class Publication(BaseModel):
     @property
     def results_path(self) -> Path:
         """Return the path where results are stored."""
-        return settings.RESULTS_PATH / f'{self.slug}/pub_{self.id}.csv'
+        return settings.DATA_PATH / f'{self.slug}/pub_{self.id}.csv'
 
     def fetch_results(self) -> dict:
         """Get (fetch) all results for this publication on API."""
