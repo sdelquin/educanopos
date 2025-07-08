@@ -14,10 +14,18 @@ Supongamos la carga de datos para procedimientos selectivos en el año 2026:
 
 ## Modo de uso
 
-- `uv run python main.py` → Rastrea las nuevas publicaciones de los tribunales.
-- `uv run python main.py --notify` → Rastrea **y notifica** las nuevas publicaciones de los tribunales.
-- `uv run python main.py --save` → Rastrea **y guarda** las nuevas publicaciones de los tribunales.
-- `uv run python main.py --notify --save` → Rastrea **notifica y guarda** las nuevas publicaciones de los tribunales.
+### Rastrear publicaciones
+
+- `uv run python main.py -v check-pub` → Rastrea las nuevas publicaciones de los tribunales.
+- `uv run python main.py -v check-pub --notify` → Rastrea **y notifica** las nuevas publicaciones de los tribunales.
+- `uv run python main.py -v check-pub --save` → Rastrea **y guarda** las nuevas publicaciones de los tribunales.
+- `uv run python main.py -v checkpub --notify --save` → Rastrea **notifica y guarda** las nuevas publicaciones de los tribunales.
+
+### Exportar resultados
+
+Se aconseja lanzar primero el rastreo de publicaciones.
+
+`uv run python main.py -v export "Primera prueba"` → Exporta a `data/primera-prueba/` los resultados de publicaciones existentes de "Primera prueba".
 
 ## Base de datos
 

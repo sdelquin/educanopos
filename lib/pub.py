@@ -70,13 +70,31 @@ def check(save: bool = True, notify: bool = True) -> None:
 
 
 def export(publication_name: str) -> None:
-    for publication in Publication.select().where(
-        fn.UPPER(Publication.name) == publication_name.upper()
-    ):
-        logger.info(f'Exporting results for: {publication}')
-        try:
-            publication.export_results()
-        except JSONDecodeError:
-            logger.error('Error decoding JSON for this publication')
-            continue
-        logger.success(f'Results exported to: {publication.results_path}')
+    notfound_publications = []
+    for process in Process.select().where(Process.active):
+        for corp in process.corps:
+            for speciality in corp.specialities:
+                for board in speciality.boards:
+                    logger.info(f'Checking board: {board}')
+                    try:
+                        publication = Publication.get(
+                            (Publication.board == board)
+                            & (fn.UPPER(Publication.name) == publication_name.upper())
+                        )
+                    except Publication.DoesNotExist:
+                        msg = f'Publication "{publication_name}" not found in board: {board}'
+                        logger.warning(msg)
+                        notfound_publications.append(msg)
+                        continue
+                    logger.info(f'Exporting results for: {publication}')
+                    try:
+                        publication.export_results()
+                    except JSONDecodeError:
+                        logger.error('Error decoding JSON for this publication')
+                        continue
+                    logger.success(f'Results exported to: {publication.results_path}')
+
+    if notfound_publications:
+        logger.warning('Some publications were not found ↓')
+        for msg in notfound_publications:
+            logger.warning(msg)
