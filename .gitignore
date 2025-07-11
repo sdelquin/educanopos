@@ -8,3 +8,4 @@ educanopos.db
 data/
 *.log*
 eda/plots/
+.Rhistory
