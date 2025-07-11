@@ -69,7 +69,6 @@ df |>
   group_by(especialidad_c) |>
   filter(!np & !exc) |>
   summarize(
-    # nota = mean(nota, na.rm = T)
     nota = mean(nota)
   ) |>
   ggplot(aes(x = fct_reorder(especialidad_c, nota), y = nota, fill = nota)) +
