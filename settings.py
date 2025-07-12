@@ -19,7 +19,7 @@ API_PUBLICATIONS_URL = config(
 )
 API_RESULTS_URL = config(
     'API_RESULTS_URL',
-    default='https://www.gobiernodecanarias.org/educacion/6/dgper/opoperdocprimweb/Scripts/publicaciones/apipublicaciones.asp?codtribunal={board_code}&op={process_code}&tipo=resultado&idpublicacion={publication_code}&tipotribunal={board_kind}&especialidad={speciality_code}&cuerpo={corp_code}&idTipoPubPadre=0',
+    default='https://www.gobiernodecanarias.org/educacion/6/dgper/opoperdocprimweb/Scripts/publicaciones/apipublicaciones.asp?codtribunal={board_code}&op={process_code}&tipo=resultado&idpublicacion={publication_code}&tipotribunal={board_kind}&especialidad={speciality_code}&cuerpo={corp_code}&idTipoPubPadre={publication_kind}',
 )
 API_SCREEN_URL = config(
     'API_SCREEN_URL',

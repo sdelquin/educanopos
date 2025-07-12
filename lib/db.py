@@ -101,6 +101,10 @@ class Publication(BaseModel):
         return f'{self.board} → {self.name}'
 
     @property
+    def kind(self) -> int:
+        return 8 if 'DETALLE DE BAREMO' in self.name.upper() else 0
+
+    @property
     def api_url(self) -> str:
         return settings.API_RESULTS_URL.format(
             publication_code=self.code,
@@ -109,6 +113,7 @@ class Publication(BaseModel):
             board_kind=self.board.kind,
             speciality_code=self.board.speciality.code,
             corp_code=self.board.speciality.corp.code,
+            publication_kind=self.kind,
         )
 
     @property
