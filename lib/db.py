@@ -87,6 +87,16 @@ class Board(BaseModel):
         """Get (fetch) all publications for this board on API."""
         yield from requests.get(self.api_url, headers={'User-Agent': settings.USER_AGENT}).json()
 
+    @staticmethod
+    def get_kind_code(board_name: str) -> str:
+        norm_name = board_name.upper()
+        if 'SISTEMA ACCESO' in norm_name:
+            return 'A'
+        if 'SISTEMA INGRESO' in norm_name:
+            if 'ÚNICO' in norm_name:
+                return 'L'
+        return 'J'
+
 
 class Publication(BaseModel):
     """Publicación"""
@@ -101,10 +111,6 @@ class Publication(BaseModel):
         return f'{self.board} → {self.name}'
 
     @property
-    def kind(self) -> int:
-        return 8 if 'DETALLE DE BAREMO' in self.name.upper() else 0
-
-    @property
     def api_url(self) -> str:
         return settings.API_RESULTS_URL.format(
             publication_code=self.code,
@@ -113,7 +119,7 @@ class Publication(BaseModel):
             board_kind=self.board.kind,
             speciality_code=self.board.speciality.code,
             corp_code=self.board.speciality.corp.code,
-            publication_kind=self.kind,
+            publication_kind=Publication.get_kind_code(self.name),
         )
 
     @property
@@ -191,6 +197,16 @@ class Publication(BaseModel):
         with open(self.results_path, 'w') as file:
             file.write(render)
 
+    @staticmethod
+    def get_kind_code(publication_name: str) -> str:
+        norm_name = publication_name.upper()
+        if 'DETALLE DE BAREMO' in norm_name:
+            if 'PROVISIONAL' in norm_name:
+                return '4'
+            if 'DEFINITIVA' in norm_name:
+                return '8'
+        return '0'
+
 
 def create_tables() -> None:
     """Create all tables in the database."""
@@ -237,6 +253,6 @@ def load_data(data_file: str) -> None:
                         Board.create(
                             code=board_data['code'],
                             name=board_data['name'],
-                            kind='L' if 'ÚNICO' in board_data['name'].upper() else 'J',
+                            kind=Board.get_kind_code(board_data['name']),
                             speciality=speciality,
                         )
