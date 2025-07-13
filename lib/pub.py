@@ -68,13 +68,16 @@ def check(save: bool = True, notify: bool = True) -> None:
                     time.sleep(settings.REQ_SLEEP)
 
 
-def export(publication_name: str) -> None:
+def export(publication_name: str, ignore_board: str) -> None:
     notfound_publications = []
     for process in Process.select().where(Process.active):
         for corp in process.corps:
             for speciality in corp.specialities:
                 for board in speciality.boards:
                     logger.info(f'Checking board: {board}')
+                    if ignore_board in board.name:
+                        logger.debug(f'Ignoring board: {board.name}')
+                        continue
                     try:
                         publication = Publication.get(
                             (Publication.board == board) & (Publication.name == publication_name)

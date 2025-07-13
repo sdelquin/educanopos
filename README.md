@@ -25,7 +25,8 @@ Supongamos la carga de datos para procedimientos selectivos en el año 2026:
 
 Se aconseja lanzar primero el rastreo de publicaciones.
 
-`uv run python main.py -v export "Primera prueba"` → Exporta a `data/primera-prueba/` los resultados de publicaciones existentes de "Primera prueba".
+- `uv run python main.py -v export "Primera prueba"` → Exporta a `data/primera-prueba/` los resultados de publicaciones existentes de "Primera prueba".
+- `uv run python main.py -v export "Primera prueba" -i "SISTEMA ACCESO"` → Exporta a `data/primera-prueba/` los resultados de publicaciones existentes de "Primera prueba" ignorando aquellos tribunales que contengan el texto `SISTEMA ACCESO`.
 
 ## Base de datos
 

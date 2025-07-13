@@ -57,9 +57,12 @@ def export(
     publication_name: str = typer.Argument(
         ..., help='Name of the publication to export results for'
     ),
+    ignore_board: str = typer.Option(
+        None, '--ignore-board', '-i', help='Ignore results from this board'
+    ),
 ):
     """Export publication results to CSV."""
-    pub.export(publication_name)
+    pub.export(publication_name, ignore_board)
 
 
 if __name__ == '__main__':
