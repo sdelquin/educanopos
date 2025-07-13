@@ -3,7 +3,6 @@ from json import JSONDecodeError
 
 import telegramtk
 from loguru import logger
-from peewee import fn
 
 import settings
 
@@ -78,8 +77,7 @@ def export(publication_name: str) -> None:
                     logger.info(f'Checking board: {board}')
                     try:
                         publication = Publication.get(
-                            (Publication.board == board)
-                            & (fn.UPPER(Publication.name) == publication_name.upper())
+                            (Publication.board == board) & (Publication.name == publication_name)
                         )
                     except Publication.DoesNotExist:
                         msg = f'Publication "{publication_name}" not found in board: {board}'
