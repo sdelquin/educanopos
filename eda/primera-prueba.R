@@ -82,6 +82,7 @@ df |>
       subtitle = "Oposiciones del profesorado 2025",
       caption = paste(
         "* (P) = Primaria; (S) = Secundaria",
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
         "* No se están teniendo en cuenta aspirantes no presentados o excluidos",
         "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
         sep = "\n"
@@ -121,6 +122,7 @@ df |>
       subtitle = "Oposiciones del profesorado 2025",
       caption = paste(
         "* (P) = Primaria; (S) = Secundaria",
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
         "* No se están teniendo en cuenta aspirantes no presentados o excluidos",
         "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
         sep = "\n"
@@ -154,7 +156,9 @@ df |>
       subtitle = "Oposiciones del profesorado 2025",
       caption = paste(
         "* (P) = Primaria; (S) = Secundaria",
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
         "* No se están teniendo en cuenta aspirantes no presentados o excluidos",
+        "* Las especialidades están ordenadas por orden alfabético",
         "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
         sep = "\n"
       ),
@@ -194,6 +198,7 @@ df |>
       subtitle = "Oposiciones del profesorado 2025",
       caption = paste(
         "* (P) = Primaria; (S) = Secundaria",
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
         "* No se están teniendo en cuenta aspirantes no presentados o excluidos",
         "* El tiempo se calcula desde la fecha de realización de la prueba mediante una media de todos los tribunales de cada especialidad",
         "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
@@ -232,6 +237,7 @@ df |>
       subtitle = "Oposiciones del profesorado 2025",
       caption = paste(
         "* (P) = Primaria; (S) = Secundaria",
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
         "* No se están teniendo en cuenta aspirantes no presentados o excluidos",
         "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
         sep = "\n"
@@ -300,6 +306,7 @@ df |>
       subtitle = "Oposiciones del profesorado 2025",
       caption = paste(
         "* (P) = Primaria; (S) = Secundaria",
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
         "* Sólo se están teniendo en cuenta aspirantes APTOS en la prueba",
         "* Las especialidades están ordenadas por orden alfabético",
         "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
@@ -329,6 +336,7 @@ df |>
       title = "Distribución de notas de cada parte de la primera prueba",
       subtitle = "Oposiciones del profesorado 2025",
       caption = paste(
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
         "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
         sep = "\n"
       ),
@@ -366,6 +374,7 @@ df |>
       subtitle = "Oposiciones del profesorado 2025",
       caption = paste(
         "* (P) = Primaria; (S) = Secundaria",
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
         "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
         sep = "\n"
       ),
