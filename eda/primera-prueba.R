@@ -158,7 +158,7 @@ df |>
         "* (P) = Primaria; (S) = Secundaria",
         "* No se están teniendo en cuenta tribunales con sistema acceso",
         "* No se están teniendo en cuenta aspirantes no presentados o excluidos",
-        "* Las especialidades están ordenadas por orden alfabético",
+        "* Las especialidades están ordenadas alfabéticamente",
         "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
         sep = "\n"
       ),
@@ -293,7 +293,6 @@ df |>
       aes(
         label = sprintf("%.02f", abs(nota)),
         hjust = if_else(parte == "A", -0.3, 1.2),
-        # y = nota / 2,
       ),
       size = 3,
       family = "Roboto",
@@ -308,7 +307,7 @@ df |>
         "* (P) = Primaria; (S) = Secundaria",
         "* No se están teniendo en cuenta tribunales con sistema acceso",
         "* Sólo se están teniendo en cuenta aspirantes APTOS en la prueba",
-        "* Las especialidades están ordenadas por orden alfabético",
+        "* Las especialidades están ordenadas alfabéticamente",
         "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
         sep = "\n"
       ),
@@ -390,3 +389,59 @@ df |>
       plot.subtitle = element_text(size = 14, color = "gray30", margin = margin(b = 20)),
       plot.caption = element_text(margin = margin(t = 30), color = "gray40")
     )
+
+# ==============================================================================
+# Nota media de la primera prueba por isla de tribunal y especialidad
+# ==============================================================================
+df |>
+  filter(!np & !exc) |>
+  mutate(
+    isla_tribunal = factor(case_when(
+      str_detect(tribunal, "TF") ~ "Tenerife",
+      str_detect(tribunal, "GC") ~ "Gran Canaria",
+      str_detect(tribunal, "LZ") ~ "Lanzarote",
+      str_detect(tribunal, "FU") ~ "Fuerteventura",
+      str_detect(tribunal, "LP") ~ "La Palma",
+      str_detect(tribunal, "GO") ~ "La Gomera",
+      str_detect(tribunal, "HI") ~ "El Hierro",
+      TRUE ~ "Desconocida"
+    ), levels = c(
+      "Tenerife", "Gran Canaria", "Lanzarote", "Fuerteventura",
+      "La Palma", "La Gomera", "El Hierro", "Desconocida"
+    )),
+    .after = "tribunal"
+  ) |>
+  mutate(
+    especialidad_c = fct_reorder(especialidad_c, as.character(especialidad_c), .fun = min, .desc = TRUE)
+  ) |>
+  group_by(isla_tribunal, especialidad_c) |>
+  summarize(
+    nota = mean(nota)
+  ) |>
+  ggplot(aes(x = isla_tribunal, y = especialidad_c, fill = nota)) +
+  geom_tile() +
+  geom_text(aes(label = sprintf("%0.2f", nota), color = nota < mean(df$nota, na.rm = T)), size = 3) +
+  scale_fill_viridis_c(option = "D", guide = "none") +
+  scale_color_manual(values = c("black", "white"), guide = "none") +
+  labs(
+    title = "Nota media de la primera prueba por isla de tribunal y especialidad",
+    subtitle = "Oposiciones del profesorado 2025",
+    caption = paste(
+      "* (P) = Primaria; (S) = Secundaria",
+      "* No se están teniendo en cuenta tribunales con sistema acceso",
+      "* No se están teniendo en cuenta aspirantes no presentados o excluidos",
+      "* Las especialidades están ordenadas alfabéticamente",
+      "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
+      sep = "\n"
+    ),
+    x = NULL,
+    y = NULL
+  ) +
+  theme_minimal(base_family = "Roboto") +
+  theme(
+    plot.margin = margin(t = 40, r = 20, b = 40, l = 20),
+    plot.title = element_text(size = 16, face = "bold", color = "gray20"),
+    plot.subtitle = element_text(size = 14, color = "gray30", margin = margin(b = 20)),
+    plot.caption = element_text(margin = margin(t = 30), color = "gray40"),
+    panel.grid = element_blank()
+  )
