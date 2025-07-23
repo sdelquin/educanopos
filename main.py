@@ -1,6 +1,6 @@
 import typer
 
-from lib import cli, db, logger, pub
+from lib import board, cli, db, logger, pub
 from lib.screen import app as screen_app
 
 app = cli.build_typer('Evaluación de la práctica docente')
@@ -36,6 +36,12 @@ def load_data(
 
 
 @app.command()
+def screen(debug: bool = typer.Option(False, '--debug', '-d', help='Run screen app in debug mode')):
+    """Display results (screen) for a specific publication."""
+    screen_app.run(debug=debug)
+
+
+@app.command()
 def check_pub(
     save: bool = typer.Option(False, '--save', '-s', help='Save new publications to the database'),
     notify: bool = typer.Option(
@@ -47,13 +53,7 @@ def check_pub(
 
 
 @app.command()
-def screen(debug: bool = typer.Option(False, '--debug', '-d', help='Run screen app in debug mode')):
-    """Display results (screen) for a specific publication."""
-    screen_app.run(debug=debug)
-
-
-@app.command()
-def export(
+def export_pub(
     publication_name: str = typer.Argument(
         ..., help='Name of the publication to export results for'
     ),
@@ -63,6 +63,16 @@ def export(
 ):
     """Export publication results to CSV."""
     pub.export(publication_name, ignore_board)
+
+
+@app.command()
+def export_boards(
+    ignore_board: str = typer.Option(
+        None, '--ignore-board', '-i', help='Ignore results from this board'
+    ),
+):
+    """Export boards data to CSV."""
+    board.export(ignore_board)
 
 
 if __name__ == '__main__':

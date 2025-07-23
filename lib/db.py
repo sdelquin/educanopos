@@ -50,6 +50,8 @@ class Speciality(BaseModel):
     code = peewee.SmallIntegerField(primary_key=True)
     name = peewee.CharField(max_length=255)
     corp = peewee.ForeignKeyField(Corp, backref='specialities')
+    entry_vacancies = peewee.IntegerField(default=0)
+    access_vacancies = peewee.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -78,6 +80,17 @@ class Board(BaseModel):
             board_kind=self.kind,
             speciality_code=self.speciality.code,
         )
+
+    @property
+    def as_dict(self) -> dict:
+        return {
+            'Proceso': self.speciality.corp.process,
+            'Cuerpo': self.speciality.corp,
+            'Especialidad': self.speciality,
+            'Plazas de ingreso': self.speciality.entry_vacancies,
+            'Plazas de acceso': self.speciality.access_vacancies,
+            'Tribunal': self.name,
+        }
 
     def get_publications(self) -> peewee.SelectQuery:
         """Get all publications for this board on database."""
@@ -176,11 +189,7 @@ class Publication(BaseModel):
     def export_results(self, add_context: bool = True) -> None:
         results = self.fetch_results()
         if add_context:
-            context = {
-                'Proceso': self.board.speciality.corp.process,
-                'Cuerpo': self.board.speciality.corp,
-                'Especialidad': self.board.speciality,
-                'Tribunal': self.board.name,
+            context = self.board.as_dict | {
                 'Publicación': self.name,
                 'Fecha de publicación': self.date,
             }
@@ -246,6 +255,8 @@ def load_data(data_file: str) -> None:
                     speciality = Speciality.create(
                         code=speciality_data['code'],
                         name=speciality_data['name'],
+                        entry_vacancies=speciality_data.get('entry_vacancies', 0),
+                        access_vacancies=speciality_data.get('access_vacancies', 0),
                         corp=corp,
                     )
                     for board_data in speciality_data['boards']:
