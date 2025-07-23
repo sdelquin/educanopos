@@ -2,21 +2,14 @@ library(tidyverse)
 library(ggdist)
 library(ggrepel)
 
-DATA_PATH <- "../data/fase-oposicion/"
+DATA_PATH <- "../data/fase-concurso-provisional/"
 
 # ==============================================================================
 # Carga de datos
 # ==============================================================================
 df <- list.files(path = DATA_PATH, pattern = "\\.csv$", full.names = T) |>
   set_names() |>
-  map(\(path) read_csv(
-    path,
-    col_types = cols(
-      `Prueba 1` = col_character(),
-      `Prueba 2` = col_character(),
-      `PUNTUACIÓN TOTAL FASE DE OPOSICIÓN` = col_character(),
-    )
-  )) |>
+  map(\(path) read_csv(path)) |>
   bind_rows(.id = "id") |>
   transmute(
     id = id,
@@ -28,22 +21,21 @@ df <- list.files(path = DATA_PATH, pattern = "\\.csv$", full.names = T) |>
       TRUE ~ paste(especialidad, "(S)")
     )),
     tribunal = Tribunal,
-    plazas = `Plazas de ingreso`,
     fecha_pub = dmy_hms(`Fecha de publicación`),
-    dni = NIF,
+    dni = DNI,
     nombre = `Apellidos y Nombre`,
-    nota_1 = as.numeric(gsub(",", ".", `Prueba 1`)),
-    nota_2 = as.numeric(gsub(",", ".", `Prueba 2`)),
-    nota = as.numeric(gsub(",", ".", `PUNTUACIÓN TOTAL FASE DE OPOSICIÓN`)),
+    nota_oposicion = as.numeric(gsub(",", ".", `Total Oposición`)),
+    nota_concurso = as.numeric(gsub(",", ".", `Total Concurso`)),
+    nota = as.numeric(gsub(",", ".", `Total`)),
   )
-
+  
 # ==============================================================================
-# Nota media de la fase de oposición por especialidad
+# Nota media de la fase de concurso por especialidad
 # ==============================================================================
 df |>
   group_by(especialidad_c) |>
   summarize(
-    nota = mean(nota)
+    nota = mean(nota_concurso)
   ) |>
   ggplot(aes(x = fct_reorder(especialidad_c, nota), y = nota, fill = nota)) +
   geom_col() +
@@ -52,7 +44,7 @@ df |>
   scale_fill_viridis_c() +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
-    title = "Nota media de la fase de oposición por especialidad",
+    title = "Nota media de la fase de concurso por especialidad",
     subtitle = "Oposiciones del profesorado 2025",
     caption = paste(
       "* (P) = Primaria; (S) = Secundaria",
@@ -74,17 +66,17 @@ df |>
   )
 
 # ==============================================================================
-# Distribución de notas (densidad) de la fase de oposición por especialidad
+# Distribución de notas (densidad) de la fase de concurso por especialidad
 # ==============================================================================
 df |>
   mutate(
     especialidad_c = fct_reorder(especialidad_c, as.character(especialidad_c), .fun = min)
   ) |>
-  ggplot(aes(x = nota)) +
+  ggplot(aes(x = nota_concurso)) +
   geom_density(fill = "skyblue", color = "steelblue4") +
   facet_wrap(~especialidad_c) +
   labs(
-    title = "Distribución de notas (densidad) de la fase de oposición por especialidad",
+    title = "Distribución de notas (densidad) de la fase de concurso por especialidad",
     subtitle = "Oposiciones del profesorado 2025",
     caption = paste(
       "* (P) = Primaria; (S) = Secundaria",
@@ -107,12 +99,12 @@ df |>
   )
 
 # ==============================================================================
-# Nota máxima de la fase de oposición por especialidad
+# Nota máxima de la fase de concurso por especialidad
 # ==============================================================================
 df |>
   group_by(especialidad_c) |>
   summarize(
-    max_nota = max(nota)
+    max_nota = max(nota_concurso)
   ) |>
   ggplot(aes(x = fct_reorder(especialidad_c, max_nota), y = max_nota, fill = max_nota)) +
   geom_col() +
@@ -121,7 +113,7 @@ df |>
   scale_fill_viridis_c() +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
-    title = "Nota máxima de la fase de oposición por especialidad",
+    title = "Nota máxima de la fase de concurso por especialidad",
     subtitle = "Oposiciones del profesorado 2025",
     caption = paste(
       "* (P) = Primaria; (S) = Secundaria",
@@ -143,7 +135,7 @@ df |>
   )
 
 # ==============================================================================
-# Nota media de cada parte de la fase de oposición por especialidad
+# Nota media de cada fase del procedimiento
 # ==============================================================================
 df |>
   mutate(
@@ -151,8 +143,8 @@ df |>
   ) |>
   group_by(especialidad_c) |>
   summarize(
-    nota_1 = -mean(nota_1),
-    nota_2 = mean(nota_2)
+    nota_oposicion = -mean(nota_oposicion),
+    nota_concurso = mean(nota_concurso)
   ) |>
   pivot_longer(
     cols = starts_with("nota"),
@@ -166,7 +158,7 @@ df |>
   geom_text(
     data = \(.) . |> filter(especialidad_c == levels(.$especialidad_c)[1]),
     aes(
-      label = c("Parte 1", "Parte 2"),
+      label = c("Oposición", "Concurso"),
       color = parte
     ),
     y = c(-3, 3),
@@ -178,7 +170,7 @@ df |>
   geom_text(
     aes(
       label = sprintf("%.02f", abs(nota)),
-      hjust = if_else(parte == "1", -0.3, 1.2),
+      hjust = if_else(parte == "OPOSICION", -0.3, 1.2),
     ),
     size = 3,
     family = "Roboto",
@@ -187,7 +179,7 @@ df |>
   coord_flip() +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
-    title = "Nota media de cada parte de la fase de oposición por especialidad",
+    title = "Nota media de cada fase del procedimiento",
     subtitle = "Oposiciones del profesorado 2025",
     caption = paste(
       "* (P) = Primaria; (S) = Secundaria",
@@ -211,39 +203,38 @@ df |>
   )
 
 # ==============================================================================
-# Distribución de notas de cada parte de la fase de oposición
+# Distribución de notas de cada fase del procedimiento
 # ==============================================================================
 df |>
   mutate(
-    across(c(nota_1, nota_2), ~ signif(., 2))
+    across(c(nota_oposicion, nota_concurso), ~ signif(., 2))
   ) |>
-  ggplot(aes(x = nota_1, y = nota_2, color = cuerpo)) +
-  geom_point() +
-  labs(
-    title = "Distribución de notas de cada parte de la fase de oposición",
-    subtitle = "Oposiciones del profesorado 2025",
-    caption = paste(
-      "* No se están teniendo en cuenta tribunales con sistema acceso",
-      "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
-      sep = "\n"
-    ),
-    x = "Nota de la parte 1",
-    y = "Nota de la parte 2"
-  ) +
-  theme_minimal(base_family = "Roboto") +
-  theme(
-    plot.margin = margin(t = 40, r = 20, b = 40, l = 20),
-    plot.title = element_text(size = 16, face = "bold", color = "gray20"),
-    plot.subtitle = element_text(size = 14, color = "gray30", margin = margin(b = 20)),
-    plot.caption = element_text(margin = margin(t = 30), color = "gray40"),
-    axis.title.x = element_text(margin = margin(t = 20)),
-    axis.title.y = element_text(margin = margin(r = 20)),
-    legend.title = element_blank()
-  )
-
+  ggplot(aes(x = nota_oposicion, y = nota_concurso)) +
+    geom_point(alpha = 0.6) +
+    labs(
+      title = "Distribución de notas de cada fase del procedimiento",
+      subtitle = "Oposiciones del profesorado 2025",
+      caption = paste(
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
+        "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
+        sep = "\n"
+      ),
+      x = "Nota de oposición",
+      y = "Nota de concurso"
+    ) +
+    theme_minimal(base_family = "Roboto") +
+    theme(
+      plot.margin = margin(t = 40, r = 20, b = 40, l = 20),
+      plot.title = element_text(size = 16, face = "bold", color = "gray20"),
+      plot.subtitle = element_text(size = 14, color = "gray30", margin = margin(b = 20)),
+      plot.caption = element_text(margin = margin(t = 30), color = "gray40"),
+      axis.title.x = element_text(margin = margin(t = 20)),
+      axis.title.y = element_text(margin = margin(r = 20)),
+      legend.title = element_blank()
+    )
 
 # ==============================================================================
-# Nota media de la fase de oposición por isla de tribunal y especialidad
+# Nota media de la fase de concurso por isla de tribunal y especialidad
 # ==============================================================================
 df |>
   mutate(
@@ -267,32 +258,32 @@ df |>
   ) |>
   group_by(isla_tribunal, especialidad_c) |>
   summarize(
-    nota = mean(nota)
+    nota_concurso = mean(nota_concurso)
   ) |>
-  ggplot(aes(x = isla_tribunal, y = especialidad_c, fill = nota)) +
-    geom_tile() +
-    coord_fixed(ratio = 0.2) +
-    geom_text(aes(label = sprintf("%0.2f", nota), color = nota < mean(df$nota)), size = 3) +
-    scale_fill_viridis_c(option = "D", guide = "none") +
-    scale_color_manual(values = c("black", "white"), guide = "none") +
-    labs(
-      title = "Nota media de la fase de oposición por isla de tribunal y especialidad",
-      subtitle = "Oposiciones del profesorado 2025",
-      caption = paste(
-        "* (P) = Primaria; (S) = Secundaria",
-        "* No se están teniendo en cuenta tribunales con sistema acceso",
-        "* Las especialidades están ordenadas alfabéticamente",
-        "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
-        sep = "\n"
-      ),
-      x = NULL,
-      y = NULL
-    ) +
-    theme_minimal(base_family = "Roboto") +
-    theme(
-      plot.margin = margin(t = 40, r = 20, b = 40, l = -150),
-      plot.title = element_text(size = 16, face = "bold", color = "gray20"),
-      plot.subtitle = element_text(size = 14, color = "gray30", margin = margin(b = 20)),
-      plot.caption = element_text(margin = margin(t = 30, r = -150), color = "gray40"),
-      panel.grid = element_blank()
-    )
+  ggplot(aes(x = isla_tribunal, y = especialidad_c, fill = nota_concurso)) +
+  geom_tile() +
+  coord_fixed(ratio = 0.2) +
+  geom_text(aes(label = sprintf("%0.2f", nota_concurso), color = nota_concurso < mean(df$nota_concurso)), size = 3) +
+  scale_fill_viridis_c(option = "D", guide = "none") +
+  scale_color_manual(values = c("black", "white"), guide = "none") +
+  labs(
+    title = "Nota media de la fase de concurso por isla de tribunal y especialidad",
+    subtitle = "Oposiciones del profesorado 2025",
+    caption = paste(
+      "* (P) = Primaria; (S) = Secundaria",
+      "* No se están teniendo en cuenta tribunales con sistema acceso",
+      "* Las especialidades están ordenadas alfabéticamente",
+      "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
+      sep = "\n"
+    ),
+    x = NULL,
+    y = NULL
+  ) +
+  theme_minimal(base_family = "Roboto") +
+  theme(
+    plot.margin = margin(t = 40, r = 20, b = 40, l = -300),
+    plot.title = element_text(size = 16, face = "bold", color = "gray20"),
+    plot.subtitle = element_text(size = 14, color = "gray30", margin = margin(b = 20)),
+    plot.caption = element_text(margin = margin(t = 30, r = -250), color = "gray40"),
+    panel.grid = element_blank()
+  )

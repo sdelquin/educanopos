@@ -17,13 +17,14 @@ df <- list.files(path = DATA_PATH, pattern = "\\.csv$", full.names = T) |>
     cuerpo = as_factor(Cuerpo),
     especialidad = as_factor(Especialidad),
     tribunal = Tribunal,
+    plazas = `Plazas de ingreso`,
     fecha_pub = dmy_hms(`Fecha de publicación`),
     dni = DNI,
     nombre = `Apellidos y Nombre`,
     nota = Prueba,
     np = `PARTE AB` == "No presentado",
     exc = `PARTE AB` == "Excluido",
-    resultado = as_factor(`...11`),
+    resultado = as_factor(`...13`),
     especialidad_c = as_factor(case_when(
       cuerpo == "Cuerpo de Maestros" ~ paste(especialidad, "(P)"),
       TRUE ~ paste(especialidad, "(S)")
@@ -248,6 +249,7 @@ df |>
   ) |>
   ggplot(aes(x = isla_tribunal, y = especialidad_c, fill = nota)) +
   geom_tile() +
+  coord_fixed(ratio = 0.2) +
   geom_text(aes(label = sprintf("%0.2f", nota), color = nota < mean(df$nota, na.rm = T)), size = 3) +
   scale_fill_viridis_c(option = "D", guide = "none") +
   scale_color_manual(values = c("black", "white"), guide = "none") +
@@ -267,9 +269,58 @@ df |>
   ) +
   theme_minimal(base_family = "Roboto") +
   theme(
-    plot.margin = margin(t = 40, r = 20, b = 40, l = 20),
+    plot.margin = margin(t = 40, r = 20, b = 40, l = -150),
     plot.title = element_text(size = 16, face = "bold", color = "gray20"),
     plot.subtitle = element_text(size = 14, color = "gray30", margin = margin(b = 20)),
-    plot.caption = element_text(margin = margin(t = 30), color = "gray40"),
+    plot.caption = element_text(margin = margin(t = 30, r = -150), color = "gray40"),
     panel.grid = element_blank()
   )
+
+# ==============================================================================
+# Número de aptos sobre el número de plazas de la segunda prueba por especialidad
+# ==============================================================================
+df |>
+  filter(!np & !exc) |>
+  group_by(especialidad_c) |>
+  summarize(
+    plazas = first(plazas),
+    aptos = sum(resultado == "APTO"),
+  ) |>
+  pivot_longer(cols = c(aptos, plazas)) |>
+  mutate(
+    opacidad = if_else(name == "plazas", 0.65, 1),
+    name = factor(name, levels = c("plazas", "aptos")),
+    especialidad_c = fct_reorder(especialidad_c, as.character(especialidad_c), .fun = min, .desc = TRUE)
+  ) |>
+  ggplot(aes(x = especialidad_c, y = value, fill = name, alpha = opacidad)) +
+    geom_col(position = position_identity()) +
+    coord_flip() +
+    scale_alpha_identity() +
+    scale_fill_manual(
+      values = c("plazas" = "orchid4", "aptos" = "aquamarine3"),
+      labels = c("plazas" = "Plazas", "aptos" = "Aptos"),
+      name = NULL
+    ) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+    labs(
+      title = "Número de aptos sobre el número de plazas de la segunda prueba por especialidad",
+      subtitle = "Oposiciones del profesorado 2025",
+      caption = paste(
+        "* (P) = Primaria; (S) = Secundaria",
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
+        "* No se están teniendo en cuenta aspirantes no presentados o excluidos",
+        "* Las especialidades están ordenadas alfabéticamente",
+        "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
+        sep = "\n"
+      ),
+      x = NULL, y = NULL
+    ) +
+    theme_minimal(base_family = "Roboto") +
+    theme(
+      # panel.grid = element_blank(),
+      plot.margin = margin(t = 40, r = 20, b = 40, l = 20),
+      # axis.text.x = element_blank(),
+      plot.title = element_text(size = 16, face = "bold", color = "gray20"),
+      plot.subtitle = element_text(size = 14, color = "gray30", margin = margin(b = 20)),
+      plot.caption = element_text(margin = margin(t = 30), color = "gray40")
+    )
