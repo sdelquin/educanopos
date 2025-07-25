@@ -2,6 +2,47 @@
 
 Notificación de las puntuaciones de oposición de la Consejería de Educación del Gobierno de Canarias
 
+## Observaciones
+
+### Tribunales
+
+- Existen dos tipos de tribunales: de **ingreso** y de **acceso**.
+- Los tribunales de acceso no tienen la misma estructura de pruebas en la fase de oposición: Sólo disponen de una prueba única. Mientras que los tribunales de ingreso tienen primera prueba y segunda prueba para la fase de oposición.
+- Publicaciones (típicas) de un **tribunal de acceso**:
+  - Prueba única
+  - Prueba única - APTOS
+  - Prueba única (Definitiva)
+  - Prueba única - APTOS (Definitiva)
+  - Fase oposición
+  - Fase concurso (Provisional)
+  - Fase de concurso (Provisional) - Detalle de baremo
+  - Fase concurso (Definitiva)
+  - Fase de concurso (Definitiva) - Detalle de baremo
+  - Fase Asignación de plazas
+- Publicaciones (típicas) de un **tribunal de ingreso**:
+  - Primera prueba
+  - Primera prueba - APTOS
+  - Citaciones - PARTE AB
+  - Segunda prueba
+  - Segunda prueba - APTOS
+  - Fase oposición
+  - Fase concurso (Provisional)
+  - Fase de concurso (Provisional) - Detalle de baremo
+  - Fase concurso (Definitiva)
+  - Fase de concurso (Definitiva) - Detalle de baremo
+  - Fase Asignación de plazas
+- La única publicación con la misma estructura en ambos tribunales es "Asignación de plazas".
+
+### Plazas
+
+- Inicialmente (en las correspondientes convocatorias) se publica el número de plazas por especialidad y por tipo (ingreso y acceso). Igualmente se publica el cupo de reserva para personas con discapacidad.
+- Desglose de plazas:
+  - Turno Libre → Tribunales de ingreso.
+  - Acceso al Subgrupo A1 → Tribunales de acceso.
+  - Reserva Discapacidad → Tribunales de ingreso o tribunales de acceso.
+- Si en una especialidad no hay aspirantes para acceso, dichas plazas se suman a las de turno libre desde el comienzo del procedimiento.
+- Si en el sistema acceso sobran plazas una vez asignadas, dichas plazas se suman a las de turno libre desde que se realice la asignación del turno de acceso.
+
 ## Puesta en marcha
 
 Supongamos la carga de datos para procedimientos selectivos en el año 2026:
