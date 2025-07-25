@@ -324,3 +324,43 @@ df |>
       plot.subtitle = element_text(size = 14, color = "gray30", margin = margin(b = 20)),
       plot.caption = element_text(margin = margin(t = 30), color = "gray40")
     )
+
+# ==============================================================================
+# Fechas de publicación de resultados de la segunda prueba por especialidad
+# ==============================================================================
+df |>
+  group_by(especialidad_c) |>
+  summarize(
+    fecha_pub = as.Date(mean(fecha_pub)),
+    cuerpo = first(cuerpo),
+    n_tribunales = n_distinct(tribunal)
+  ) |>
+  ggplot(aes(x = fct_reorder(especialidad_c, fecha_pub), y = fecha_pub, color = cuerpo, size = n_tribunales)) +
+    geom_point() +
+    scale_y_date(breaks = "1 day", date_labels = "%d/%m/%y") +
+    coord_flip() +
+    labs(
+      title = "Fechas de publicación de resultados de la segunda prueba por especialidad",
+      subtitle = "Oposiciones del profesorado 2025",
+      caption = paste(
+        "* No se están teniendo en cuenta tribunales con sistema acceso",
+        "* Se ha hecho un promedio de las fechas de publicación de los tribunales de cada especialidad",
+        "© Sergio Delgado Quintero | Datos publicados por la Consejería de Educación del Gobierno de Canarias",
+        sep = "\n"
+      ),
+      x = NULL,
+      y = NULL,
+      color = "Cuerpo",
+      size = "Número de tribunales"
+    ) +
+    theme_minimal(base_family = "Roboto") +
+    theme(
+      plot.margin = margin(t = 40, r = 40, b = 40, l = 20),
+      plot.title = element_text(size = 16, face = "bold", color = "gray20"),
+      plot.subtitle = element_text(size = 14, color = "gray30", margin = margin(b = 20)),
+      plot.caption = element_text(margin = margin(t = 30), color = "gray40"),
+      axis.title.x = element_text(margin = margin(t = 20)),
+      axis.title.y = element_text(margin = margin(r = 20)),
+      panel.grid.minor.x = element_blank(),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 8, color = "gray50")
+    )
