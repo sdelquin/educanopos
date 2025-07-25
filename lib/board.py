@@ -13,7 +13,7 @@ def export(ignore_board: str) -> None:
             for speciality in corp.specialities:
                 for board in speciality.boards:
                     logger.info(f'Handling board: {board}')
-                    if ignore_board in board.name:
+                    if ignore_board and ignore_board in board.name:
                         logger.debug(f'Ignoring board: {board.name}')
                         continue
                     data.append(board.as_dict)

@@ -75,7 +75,7 @@ def export(publication_name: str, ignore_board: str) -> None:
             for speciality in corp.specialities:
                 for board in speciality.boards:
                     logger.info(f'Checking board: {board}')
-                    if ignore_board in board.name:
+                    if ignore_board and ignore_board in board.name:
                         logger.debug(f'Ignoring board: {board.name}')
                         continue
                     try:

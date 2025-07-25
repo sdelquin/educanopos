@@ -58,7 +58,7 @@ def export_pub(
         ..., help='Name of the publication to export results for'
     ),
     ignore_board: str = typer.Option(
-        None, '--ignore-board', '-i', help='Ignore results from this board'
+        '', '--ignore-board', '-i', help='Ignore results from this board'
     ),
 ):
     """Export publication results to CSV."""
@@ -68,7 +68,7 @@ def export_pub(
 @app.command()
 def export_boards(
     ignore_board: str = typer.Option(
-        None, '--ignore-board', '-i', help='Ignore results from this board'
+        '', '--ignore-board', '-i', help='Ignore results from this board'
     ),
 ):
     """Export boards data to CSV."""
